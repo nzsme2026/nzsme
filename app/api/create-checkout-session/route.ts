@@ -1,29 +1,36 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2023-10-16",
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST() {
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    mode: "payment",
-    line_items: [
-      {
-        price_data: {
-          currency: "nzd",
-          product_data: {
-            name: "NZSME Membership - Annual",
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: [
+        {
+          price_data: {
+            currency: "nzd",
+            product_data: {
+              name: "NZSME Membership - Annual",
+            },
+            unit_amount: 6000,
           },
-          unit_amount: 6000, // $60 NZD
+          quantity: 1,
         },
-        quantity: 1,
-      },
-    ],
-    success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/apply?paid=true`,
-    cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/apply`,
-  });
+      ],
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/apply?paid=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/apply`,
+    });
 
-  return NextResponse.json({ id: session.id });
+    return NextResponse.json({ url: session.url });
+
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Unable to create checkout session" },
+      { status: 500 }
+    );
+  }
 }

@@ -3,13 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
-export default function ApplyPage({
-  searchParams,
-}: {
-  searchParams: { paid?: string };
-}) {
-  const isPaid = searchParams?.paid === "true";
-
+export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
   const [submitted, setSubmitted] = useState(false);
   const [confirmationId, setConfirmationId] = useState("");
 
@@ -18,44 +12,19 @@ export default function ApplyPage({
     lastName: "",
     phone: "",
     email: "",
-    businessName: "",
-    nzbn: "",
-    tradingName: "",
-    website: "",
-    businessEmail: "",
-    businessPhone: "",
-    address: "",
-    description: "",
-    category: "",
-    logoEmail: "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handlePayment = async () => {
-    try {
-      const res = await fetch("/api/create-checkout-session", {
-        method: "POST",
-      });
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+    });
 
-      const data = await res.json();
-
-      if (!data?.url) {
-        alert("Unable to start payment.");
-        return;
-      }
-
-      window.location.href = data.url;
-    } catch {
-      alert("Payment error.");
-    }
+    const data = await res.json();
+    window.location.href = data.url;
   };
 
   const generateConfirmationId = () => {
@@ -72,11 +41,6 @@ export default function ApplyPage({
       return;
     }
 
-    if (!formData.firstName || !formData.lastName || !formData.phone) {
-      alert("First name, Last name and Mobile number are required.");
-      return;
-    }
-
     const id = generateConfirmationId();
     setConfirmationId(id);
     setSubmitted(true);
@@ -88,37 +52,53 @@ export default function ApplyPage({
         <Link href="/" className="font-bold bg-black px-3 py-1 text-sm">
           NZSME
         </Link>
-        <Link href="/login" className="hover:underline">
-          Login
-        </Link>
       </nav>
 
       <div className="max-w-4xl mx-auto py-12 px-6">
         {!submitted ? (
           <>
-            <div className="text-center mb-10">
-              <h1 className="text-3xl font-bold">
-                NZSME - Membership Request
-              </h1>
-            </div>
-
             {!isPaid && (
               <div className="mb-10 p-6 bg-white border rounded-lg text-center shadow-sm">
                 <h2 className="text-lg font-semibold mb-2">
                   Membership Fee - $60 NZD / Year
                 </h2>
                 <button
-                  type="button"
                   onClick={handlePayment}
-                  className="bg-black text-white px-6 py-2 rounded hover:opacity-90"
+                  className="bg-black text-white px-6 py-2 rounded"
                 >
                   Pay & Continue
                 </button>
               </div>
             )}
 
-            {/* Keep rest of form exactly same as previous version */}
-            {/* (omitted here for brevity but keep your existing form JSX unchanged) */}
+            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-sm border space-y-6">
+              <input
+                name="firstName"
+                placeholder="First Name"
+                onChange={handleChange}
+                className="border rounded-lg p-3 w-full"
+              />
+              <input
+                name="lastName"
+                placeholder="Last Name"
+                onChange={handleChange}
+                className="border rounded-lg p-3 w-full"
+              />
+              <input
+                name="phone"
+                placeholder="Phone"
+                onChange={handleChange}
+                className="border rounded-lg p-3 w-full"
+              />
+
+              <button
+                type="submit"
+                disabled={!isPaid}
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg disabled:bg-gray-400"
+              >
+                Submit Application
+              </button>
+            </form>
           </>
         ) : (
           <div className="bg-white p-10 rounded-xl shadow-md text-center">
@@ -127,12 +107,12 @@ export default function ApplyPage({
             </h2>
 
             <p className="mb-4">
-              Thank you <strong>{formData.firstName}</strong> for joining NZSME.
+              Thank you <strong>{formData.firstName}</strong>
             </p>
 
             <div className="bg-gray-100 p-4 rounded-lg inline-block">
               <p className="text-sm text-gray-600">
-                Your Membership Confirmation ID
+                Confirmation ID
               </p>
               <p className="text-xl font-bold text-slate-900">
                 {confirmationId}
