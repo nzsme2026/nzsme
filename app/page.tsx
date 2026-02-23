@@ -5,21 +5,24 @@ import BottomStatusBar from "@/components/BottomStatusBar";
 export default function HomePage() {
   return (
     <main className="min-h-screen relative overflow-hidden bg-[#f5f7fb]">
-      {/* Background watermark skyline */}
+
+      {/* Background Skyline */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.08]"
+        className="pointer-events-none absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: "url('/bg-auckland.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          filter: "grayscale(100%)"
+          filter: "grayscale(80%)"
         }}
       />
+
+      {/* Soft Overlay for readability */}
+      <div className="pointer-events-none absolute inset-0 bg-white/70" />
 
       <Navbar />
 
       <section className="relative mx-auto max-w-6xl px-6 pt-16 pb-28">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 items-center">
+          
           {/* Left */}
           <div className="max-w-xl">
             <div className="text-xs font-semibold tracking-wide text-slate-500">
@@ -33,8 +36,8 @@ export default function HomePage() {
             </h1>
 
             <p className="mt-5 text-base leading-7 text-slate-600">
-              Join New Zealand&apos;s premier private network for SME owners. Access verified
-              business connections, exclusive events, and growth opportunities.
+              Join New Zealand&apos;s premier private network for SME owners.
+              Access verified business connections, exclusive events, and growth opportunities.
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3">
@@ -75,8 +78,7 @@ export default function HomePage() {
 
           {/* Right */}
           <div className="relative">
-            <div className="mx-auto w-full max-w-xl rounded-2xl bg-white shadow-soft ring-1 ring-slate-200/60 overflow-hidden">
-              {/* Use your own image to match screenshot exactly */}
+            <div className="mx-auto w-full max-w-xl rounded-2xl bg-white shadow-lg ring-1 ring-slate-200/60 overflow-hidden">
               <div className="relative aspect-[4/3] w-full">
                 <Image
                   src="/hero-meeting.jpg"
@@ -88,6 +90,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+
         </div>
       </section>
 
