@@ -1,146 +1,18 @@
-"use client";
+import ApplyForm from "./ApplyForm";
 
-import Link from "next/link";
-import { useState } from "react";
+type ApplyPageProps = {
+  searchParams: Promise<{ paid?: string }>;
+};
 
-export default function ApplyPage({
+export default async function ApplyPage({
   searchParams,
-}: {
-  searchParams: { paid?: string };
-}) {
-  const isPaid = searchParams?.paid === "true";
-
-  const [submitted, setSubmitted] = useState(false);
-  const [confirmationId, setConfirmationId] = useState("");
-
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
-    businessName: "",
-    nzbn: "",
-    tradingName: "",
-    website: "",
-    businessEmail: "",
-    businessPhone: "",
-    address: "",
-    description: "",
-    category: "",
-    logoEmail: "",
-  });
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handlePayment = async () => {
-    try {
-      const res = await fetch("/api/create-checkout-session", {
-        method: "POST",
-      });
-
-      const data = await res.json();
-
-      if (!data?.url) {
-        alert("Unable to start payment.");
-        return;
-      }
-
-      window.location.href = data.url;
-    } catch {
-      alert("Payment error.");
-    }
-  };
-
-  const generateConfirmationId = () => {
-    const prefix = formData.firstName.substring(0, 3).toUpperCase();
-    const timestamp = Date.now().toString().slice(-6);
-    return `NZSME-${prefix}-${timestamp}`;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!isPaid) {
-      alert("Please complete payment first.");
-      return;
-    }
-
-    if (!formData.firstName || !formData.lastName || !formData.phone) {
-      alert("First name, Last name and Mobile number are required.");
-      return;
-    }
-
-    const id = generateConfirmationId();
-    setConfirmationId(id);
-    setSubmitted(true);
-  };
+}: ApplyPageProps) {
+  const params = await searchParams;
+  const isPaid = params?.paid === "true";
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-[#1f2937] text-white px-8 py-4 flex justify-between items-center">
-        <Link href="/" className="font-bold bg-black px-3 py-1 text-sm">
-          NZSME
-        </Link>
-        <Link href="/login" className="hover:underline">
-          Login
-        </Link>
-      </nav>
-
-      <div className="max-w-4xl mx-auto py-12 px-6">
-        {!submitted ? (
-          <>
-            <div className="text-center mb-10">
-              <h1 className="text-3xl font-bold">
-                NZSME - Membership Request
-              </h1>
-            </div>
-
-            {!isPaid && (
-              <div className="mb-10 p-6 bg-white border rounded-lg text-center shadow-sm">
-                <h2 className="text-lg font-semibold mb-2">
-                  Membership Fee - $60 NZD / Year
-                </h2>
-                <button
-                  type="button"
-                  onClick={handlePayment}
-                  className="bg-black text-white px-6 py-2 rounded hover:opacity-90"
-                >
-                  Pay & Continue
-                </button>
-              </div>
-            )}
-
-            {/* Keep rest of form exactly same as previous version */}
-            {/* (omitted here for brevity but keep your existing form JSX unchanged) */}
-          </>
-        ) : (
-          <div className="bg-white p-10 rounded-xl shadow-md text-center">
-            <h2 className="text-2xl font-bold mb-4 text-green-600">
-              Membership Application Submitted
-            </h2>
-
-            <p className="mb-4">
-              Thank you <strong>{formData.firstName}</strong> for joining NZSME.
-            </p>
-
-            <div className="bg-gray-100 p-4 rounded-lg inline-block">
-              <p className="text-sm text-gray-600">
-                Your Membership Confirmation ID
-              </p>
-              <p className="text-xl font-bold text-slate-900">
-                {confirmationId}
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
+    <div className="min-h-screen bg-gray-50 py-10 px-4">
+      <ApplyForm isPaid={isPaid} />
     </div>
   );
 }
