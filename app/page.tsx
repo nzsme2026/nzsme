@@ -94,6 +94,31 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Facebook Community Section */}
+      <section className="relative bg-slate-900 text-white py-20">
+        <div className="max-w-6xl mx-auto px-6 text-center">
+          <h2 className="text-3xl font-semibold">
+            Join the NZSME Community
+          </h2>
+
+          <p className="mt-4 text-slate-300 max-w-2xl mx-auto leading-7">
+            Stay updated with member highlights, business events, and networking opportunities.
+            Follow our official Facebook page and be part of the growing NZSME network.
+          </p>
+
+          <div className="mt-8">
+            <a
+              href="https://www.facebook.com/profile.php?id=61586404397699"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-md bg-white px-6 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-200 transition"
+            >
+              Follow NZSME on Facebook
+            </a>
+          </div>
+        </div>
+      </section>
+
       <BottomStatusBar />
     </main>
   );
