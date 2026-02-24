@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -24,7 +25,9 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
   });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -64,11 +67,46 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-[#1f2937] text-white px-8 py-4 flex justify-between items-center">
-        <Link href="/" className="font-bold bg-black px-3 py-1 text-sm">
-          NZSME
-        </Link>
-      </nav>
+      {/* Header (kept inside Apply page to avoid layout issues) */}
+      <header className="relative z-10 w-full border-b border-slate-200/70 bg-slate-900">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+          {/* Logo */}
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/NZSME.jpeg"
+              alt="NZSME Logo"
+              width={140}
+              height={40}
+              priority
+            />
+          </Link>
+
+          {/* Nav */}
+          <nav className="hidden items-center gap-8 text-sm font-medium text-slate-200 md:flex">
+            <Link className="hover:text-white transition" href="/">
+              Home
+            </Link>
+            
+          </nav>
+
+          {/* Right actions */}
+          <div className="flex items-center gap-4">
+            <Link
+              href="/login"
+              className="hidden text-sm font-medium text-slate-200 hover:text-white transition md:inline-flex"
+            >
+              Login
+            </Link>
+
+            <Link
+              href="/apply"
+              className="inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-100 transition"
+            >
+              Apply Now
+            </Link>
+          </div>
+        </div>
+      </header>
 
       <div className="max-w-5xl mx-auto py-12 px-6">
         {!submitted ? (
@@ -125,9 +163,7 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
 
               {/* BUSINESS DETAILS */}
               <div>
-                <h2 className="text-xl font-semibold mb-2">
-                  Business Details
-                </h2>
+                <h2 className="text-xl font-semibold mb-2">Business Details</h2>
                 <p className="text-sm text-gray-500 mb-4">
                   Please fill these details fully so we can add you to our
                   directory.
@@ -209,11 +245,8 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
                   <option>Other</option>
                 </select>
 
-                {/* Logo Instructions */}
                 <div className="mt-6 p-4 bg-gray-100 rounded-lg text-sm">
-                  <p className="font-semibold mb-1">
-                    Business Logo Submission
-                  </p>
+                  <p className="font-semibold mb-1">Business Logo Submission</p>
                   <p>
                     Please email your logo to{" "}
                     <strong>nzsme2026@gmail.com</strong>
