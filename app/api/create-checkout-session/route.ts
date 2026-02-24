@@ -15,19 +15,26 @@ export async function POST() {
             product_data: {
               name: "NZSME Membership - Annual",
             },
-            unit_amount: 6000,
+            unit_amount: 6000, // $60 NZD
           },
           quantity: 1,
         },
       ],
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/apply?paid=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/apply`,
+      success_url: "https://nzsme.org/apply?paid=true",
+      cancel_url: "https://nzsme.org/apply",
     });
+
+    if (!session.url) {
+      return NextResponse.json(
+        { error: "Stripe session URL not created" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ url: session.url });
 
   } catch (error) {
-    console.error(error);
+    console.error("Stripe Error:", error);
     return NextResponse.json(
       { error: "Unable to create checkout session" },
       { status: 500 }
