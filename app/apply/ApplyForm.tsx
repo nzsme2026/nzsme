@@ -47,7 +47,7 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
     return `NZSME-${prefix}-${timestamp}`;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!isPaid) {
@@ -60,9 +60,30 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
       return;
     }
 
-    const id = generateConfirmationId();
-    setConfirmationId(id);
-    setSubmitted(true);
+    try {
+      const res = await fetch("/api/submit-application", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        console.error("Submit API error:", result);
+        alert("Something went wrong while submitting. Please try again.");
+        return;
+      }
+
+      const id = generateConfirmationId();
+      setConfirmationId(id);
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Submit error:", error);
+      alert("Submission failed. Please try again.");
+    }
   };
 
   return (
@@ -86,7 +107,6 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
             <Link className="hover:text-white transition" href="/">
               Home
             </Link>
-            
           </nav>
 
           {/* Right actions */}
