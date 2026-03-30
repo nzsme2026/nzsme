@@ -1,8 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
 export default function Navbar() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <header className="relative z-10 w-full border-b border-slate-200/70 bg-slate-900">
+    <header className="relative z-50 w-full border-b border-slate-200/70 bg-slate-900">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
         
         {/* Logo */}
@@ -16,46 +21,50 @@ export default function Navbar() {
           />
         </a>
 
-        {/* Nav */}
-        <nav className="hidden items-center gap-8 text-sm font-medium text-slate-200 md:flex">
-          <a className="hover:text-white transition" href="/">
-            Home
-          </a>
-
-          <a className="hover:text-white transition" href="/community">
-            Community
-          </a>
-
-          {/* 🔥 EVENTS (highlighted slightly) */}
-          <a
-            className="text-yellow-400 hover:text-yellow-300 font-semibold transition"
-            href="/events"
-          >
-            Events
-          </a>
-
-          <a className="hover:text-white transition" href="/apply">
-            Apply
-          </a>
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-200">
+          <a className="hover:text-white" href="/">Home</a>
+          <a className="hover:text-white" href="/community">Community</a>
+          <a className="text-yellow-400 font-semibold" href="/events">Events</a>
+          <a className="hover:text-white" href="/apply">Apply</a>
         </nav>
 
-        {/* Right actions */}
+        {/* Right */}
         <div className="flex items-center gap-4">
           <a
             href="/login"
-            className="hidden text-sm font-medium text-slate-200 hover:text-white transition md:inline-flex"
+            className="hidden md:inline-flex text-sm text-slate-200 hover:text-white"
           >
             Login
           </a>
 
           <a
             href="/apply"
-            className="inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-100 transition"
+            className="bg-white text-slate-900 px-4 py-2 rounded-md text-sm font-semibold"
           >
             Apply Now
           </a>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setOpen(!open)}
+            className="md:hidden text-white text-xl"
+          >
+            ☰
+          </button>
         </div>
       </div>
+
+      {/* Mobile Dropdown */}
+      {open && (
+        <div className="md:hidden bg-slate-900 px-6 pb-4 space-y-3 text-slate-200">
+          <a href="/" className="block">Home</a>
+          <a href="/community" className="block">Community</a>
+          <a href="/events" className="block text-yellow-400 font-semibold">Events</a>
+          <a href="/apply" className="block">Apply</a>
+          <a href="/login" className="block">Login</a>
+        </div>
+      )}
     </header>
   );
 }
