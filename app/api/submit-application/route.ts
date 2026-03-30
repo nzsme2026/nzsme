@@ -2,15 +2,8 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
 
-const apiKey = process.env.RESEND_API_KEY;
+const resend = new Resend(process.env.RESEND_API_KEY!);
 
-if (!apiKey) {
-  console.error("RESEND_API_KEY is missing");
-}
-
-const resend = new Resend(apiKey!);
-
-// Supabase admin client
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -29,36 +22,66 @@ export async function POST(req: Request) {
     const data = await req.json();
     console.log("PAYLOAD:", data);
 
-    // 🔒 Duplicate protection (based on email)
-    if (data.email) {
-      const { data: existing, error: checkError } = await supabaseAdmin
+    // 🧠 SAFE CLEAN FUNCTION
+    const clean = (s: string) =>
+      (s || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+
+    const fn = clean(data.firstName || "USR").slice(0, 3).padEnd(3, "X");
+    const ln = clean(data.lastName || "USR").slice(0, 3).padEnd(3, "X");
+
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, "0");
+    const dd = String(now.getDate()).padStart(2, "0");
+
+    const rand = Math.floor(1000 + Math.random() * 9000);
+
+    const confirmationId = `NZSME-${yyyy}${mm}${dd}-${fn}${ln}-${rand}`;
+
+    // 🔒 DUPLICATE CHECK (SAFE)
+    let existing = null;
+
+    if (data.email || data.phone) {
+      const { data: existingData } = await supabaseAdmin
         .from("membership_applications")
-        .select("id")
-        .eq("email", data.email)
-        .order("created_at", { ascending: false })
+        .select("confirmation_id")
+        .or(
+          [
+            data.email ? `email.eq.${data.email}` : null,
+            data.phone ? `phone.eq.${data.phone}` : null,
+          ]
+            .filter(Boolean)
+            .join(",")
+        )
         .limit(1);
 
-      if (checkError) {
-        console.error("CHECK ERROR:", checkError);
-      }
-
-      if (existing && existing.length > 0) {
-        console.log("Duplicate detected, skipping insert");
-
-        // Return success to avoid user confusion
-        return NextResponse.json({ success: true });
+      if (existingData && existingData.length > 0) {
+        existing = existingData[0];
       }
     }
 
-    // Insert into DB
+    // ✅ IF DUPLICATE → RETURN EXISTING ID
+    if (existing) {
+      console.log("Duplicate detected, returning existing ID");
+
+      return NextResponse.json({
+        success: true,
+        confirmationId: existing.confirmation_id,
+      });
+    }
+
+    // ✅ INSERT INTO DB
     const { error: dbError } = await supabaseAdmin
       .from("membership_applications")
       .insert([
         {
+          confirmation_id: confirmationId,
+
           first_name: data.firstName || "",
           last_name: data.lastName || "",
           phone: data.phone || "",
           email: data.email || "",
+
           registered_business_name: data.registeredBusinessName || "",
           nzbn: data.nzbn || "",
           trading_name: data.tradingName || "",
@@ -68,28 +91,25 @@ export async function POST(req: Request) {
           address: data.address || "",
           description: data.description || "",
           category: data.category || "",
+
           payment_status: "paid",
         },
       ]);
 
-    // ❌ If DB fails → return SAFE message
     if (dbError) {
-      console.error("DB INSERT ERROR:", dbError);
+      console.error("DB ERROR:", dbError);
 
       return NextResponse.json(
         {
           error:
-            "We have received your payment. However, there was an issue submitting your details. Please feel free to WhatsApp your details to Shailesh on 0273333300.",
+            "We received your payment, but there was an issue saving your details. Please WhatsApp your details to 0273333300.",
         },
         { status: 500 }
       );
     }
 
-    // ✅ Respond immediately (prevents timeout)
-    const response = NextResponse.json({ success: true });
-
-    // 🔁 Send email in background (no await)
-    if (apiKey) {
+    // 📧 EMAIL (NON-BLOCKING)
+    if (process.env.RESEND_API_KEY) {
       resend.emails
         .send({
           from: "NZSME <onboarding@resend.dev>",
@@ -97,36 +117,32 @@ export async function POST(req: Request) {
           subject: "New NZSME Membership Application",
           html: `
             <h2>New Membership Application</h2>
+            <p><strong>Confirmation ID:</strong> ${confirmationId}</p>
             <hr/>
-            <p><strong>First Name:</strong> ${data.firstName || ""}</p>
-            <p><strong>Last Name:</strong> ${data.lastName || ""}</p>
-            <p><strong>Phone:</strong> ${data.phone || ""}</p>
-            <p><strong>Email:</strong> ${data.email || ""}</p>
+            <p><strong>Name:</strong> ${data.firstName} ${data.lastName}</p>
+            <p><strong>Phone:</strong> ${data.phone}</p>
+            <p><strong>Email:</strong> ${data.email || "-"}</p>
             <hr/>
-            <p><strong>Registered Business Name:</strong> ${data.registeredBusinessName || ""}</p>
-            <p><strong>NZBN:</strong> ${data.nzbn || ""}</p>
-            <p><strong>Trading Name:</strong> ${data.tradingName || ""}</p>
-            <p><strong>Website:</strong> ${data.website || ""}</p>
-            <p><strong>Business Email:</strong> ${data.businessEmail || ""}</p>
-            <p><strong>Business Phone:</strong> ${data.businessPhone || ""}</p>
-            <p><strong>Address:</strong> ${data.address || ""}</p>
-            <p><strong>Description:</strong> ${data.description || ""}</p>
-            <p><strong>Category:</strong> ${data.category || ""}</p>
+            <p><strong>Business:</strong> ${data.registeredBusinessName || "-"}</p>
+            <p><strong>Category:</strong> ${data.category || "-"}</p>
           `,
         })
-        .catch((emailError) => {
-          console.error("EMAIL ERROR:", emailError);
-        });
+        .catch((err) => console.error("EMAIL ERROR:", err));
     }
 
-    return response;
+    // ✅ FINAL RESPONSE
+    return NextResponse.json({
+      success: true,
+      confirmationId,
+    });
+
   } catch (error: any) {
     console.error("SERVER ERROR:", error);
 
     return NextResponse.json(
       {
         error:
-          "We have received your payment. However, there was an issue submitting your details. Please feel free to WhatsApp your details to Shailesh on 0273333300.",
+          "We received your payment, but something went wrong. Please WhatsApp your details to 0273333300.",
       },
       { status: 500 }
     );
