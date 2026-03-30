@@ -4,6 +4,7 @@ export default function Navbar() {
   return (
     <header className="relative z-10 w-full border-b border-slate-200/70 bg-slate-900">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+        
         {/* Logo */}
         <a href="/" className="flex items-center">
           <Image
@@ -20,6 +21,19 @@ export default function Navbar() {
           <a className="hover:text-white transition" href="/">
             Home
           </a>
+
+          <a className="hover:text-white transition" href="/community">
+            Community
+          </a>
+
+          {/* 🔥 EVENTS (highlighted slightly) */}
+          <a
+            className="text-yellow-400 hover:text-yellow-300 font-semibold transition"
+            href="/events"
+          >
+            Events
+          </a>
+
           <a className="hover:text-white transition" href="/apply">
             Apply
           </a>
