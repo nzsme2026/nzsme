@@ -7,6 +7,7 @@ import { useState } from "react";
 export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
   const [submitted, setSubmitted] = useState(false);
   const [confirmationId, setConfirmationId] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -41,22 +42,17 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
     window.location.href = data.url;
   };
 
-  const generateConfirmationId = () => {
-    const prefix = formData.firstName.substring(0, 3).toUpperCase();
-    const timestamp = Date.now().toString().slice(-6);
-    return `NZSME-${prefix}-${timestamp}`;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg("");
 
     if (!isPaid) {
-      alert("Please complete payment first.");
+      setErrorMsg("Please complete payment first.");
       return;
     }
 
     if (!formData.firstName || !formData.lastName || !formData.phone) {
-      alert("First Name, Last Name and Mobile Number are required.");
+      setErrorMsg("First Name, Last Name and Mobile Number are required.");
       return;
     }
 
@@ -73,25 +69,25 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
 
       if (!res.ok) {
         console.error("Submit API error:", result);
-        alert("Something went wrong while submitting. Please try again.");
+        setErrorMsg(result.error || "Something went wrong.");
         return;
       }
 
-      const id = generateConfirmationId();
-      setConfirmationId(id);
+      // ✅ REAL ID FROM BACKEND
+      setConfirmationId(result.confirmationId);
       setSubmitted(true);
+
     } catch (error) {
       console.error("Submit error:", error);
-      alert("Submission failed. Please try again.");
+      setErrorMsg("Submission failed. Please try again.");
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header (kept inside Apply page to avoid layout issues) */}
+      {/* Header */}
       <header className="relative z-10 w-full border-b border-slate-200/70 bg-slate-900">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-          {/* Logo */}
           <Link href="/" className="flex items-center">
             <Image
               src="/NZSME.jpeg"
@@ -102,25 +98,23 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
             />
           </Link>
 
-          {/* Nav */}
           <nav className="hidden items-center gap-8 text-sm font-medium text-slate-200 md:flex">
             <Link className="hover:text-white transition" href="/">
               Home
             </Link>
           </nav>
 
-          {/* Right actions */}
           <div className="flex items-center gap-4">
             <Link
               href="/login"
-              className="hidden text-sm font-medium text-slate-200 hover:text-white transition md:inline-flex"
+              className="hidden text-sm font-medium text-slate-200 hover:text-white md:inline-flex"
             >
               Login
             </Link>
 
             <Link
               href="/apply"
-              className="inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-100 transition"
+              className="inline-flex items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-900"
             >
               Apply Now
             </Link>
@@ -145,142 +139,63 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
               </div>
             )}
 
+            {errorMsg && (
+              <div className="mb-6 p-4 bg-red-100 text-red-700 rounded">
+                {errorMsg}
+              </div>
+            )}
+
             <form
               onSubmit={handleSubmit}
               className="bg-white p-8 rounded-xl shadow-sm border space-y-8"
             >
-              {/* PERSONAL DETAILS */}
+              {/* PERSONAL */}
               <div>
                 <h2 className="text-xl font-semibold mb-4">Personal Details</h2>
 
                 <div className="grid md:grid-cols-2 gap-4">
-                  <input
-                    name="firstName"
-                    placeholder="First Name *"
-                    onChange={handleChange}
-                    className="border rounded-lg p-3 w-full"
-                  />
-                  <input
-                    name="lastName"
-                    placeholder="Last Name *"
-                    onChange={handleChange}
-                    className="border rounded-lg p-3 w-full"
-                  />
-                  <input
-                    name="phone"
-                    placeholder="Mobile Number *"
-                    onChange={handleChange}
-                    className="border rounded-lg p-3 w-full"
-                  />
-                  <input
-                    name="email"
-                    placeholder="Email"
-                    onChange={handleChange}
-                    className="border rounded-lg p-3 w-full"
-                  />
+                  <input name="firstName" placeholder="First Name *" onChange={handleChange} className="border p-3 rounded" />
+                  <input name="lastName" placeholder="Last Name *" onChange={handleChange} className="border p-3 rounded" />
+                  <input name="phone" placeholder="Mobile Number *" onChange={handleChange} className="border p-3 rounded" />
+                  <input name="email" placeholder="Email" onChange={handleChange} className="border p-3 rounded" />
                 </div>
               </div>
 
-              {/* BUSINESS DETAILS */}
+              {/* BUSINESS */}
               <div>
                 <h2 className="text-xl font-semibold mb-2">Business Details</h2>
-                <p className="text-sm text-gray-500 mb-4">
-                  Please fill these details fully so we can add you to our
-                  directory.
-                </p>
 
                 <div className="grid md:grid-cols-2 gap-4">
-                  <input
-                    name="registeredBusinessName"
-                    placeholder="Registered Business Name"
-                    onChange={handleChange}
-                    className="border rounded-lg p-3 w-full"
-                  />
-                  <input
-                    name="nzbn"
-                    placeholder="NZBN Number"
-                    onChange={handleChange}
-                    className="border rounded-lg p-3 w-full"
-                  />
-                  <input
-                    name="tradingName"
-                    placeholder="Trading As Name"
-                    onChange={handleChange}
-                    className="border rounded-lg p-3 w-full"
-                  />
-                  <input
-                    name="website"
-                    placeholder="Website URL"
-                    onChange={handleChange}
-                    className="border rounded-lg p-3 w-full"
-                  />
-                  <input
-                    name="businessEmail"
-                    placeholder="Business Email"
-                    onChange={handleChange}
-                    className="border rounded-lg p-3 w-full"
-                  />
-                  <input
-                    name="businessPhone"
-                    placeholder="Business Phone"
-                    onChange={handleChange}
-                    className="border rounded-lg p-3 w-full"
-                  />
+                  <input name="registeredBusinessName" placeholder="Registered Business Name" onChange={handleChange} className="border p-3 rounded" />
+                  <input name="nzbn" placeholder="NZBN Number" onChange={handleChange} className="border p-3 rounded" />
+                  <input name="tradingName" placeholder="Trading Name" onChange={handleChange} className="border p-3 rounded" />
+                  <input name="website" placeholder="Website URL" onChange={handleChange} className="border p-3 rounded" />
+                  <input name="businessEmail" placeholder="Business Email" onChange={handleChange} className="border p-3 rounded" />
+                  <input name="businessPhone" placeholder="Business Phone" onChange={handleChange} className="border p-3 rounded" />
                 </div>
 
-                <textarea
-                  name="address"
-                  placeholder="Business Address"
-                  onChange={handleChange}
-                  className="border rounded-lg p-3 w-full mt-4"
-                />
+                <textarea name="address" placeholder="Address" onChange={handleChange} className="border p-3 rounded w-full mt-4" />
+                <textarea name="description" placeholder="Description" onChange={handleChange} className="border p-3 rounded w-full mt-4" />
 
-                <textarea
-                  name="description"
-                  placeholder="Business Description"
-                  onChange={handleChange}
-                  className="border rounded-lg p-3 w-full mt-4"
-                />
-
-                <select
-                  name="category"
-                  onChange={handleChange}
-                  className="border rounded-lg p-3 w-full mt-4"
-                >
-                  <option value="">Select Business Category</option>
+                <select name="category" onChange={handleChange} className="border p-3 rounded w-full mt-4">
+                  <option value="">Select Category</option>
                   <option>Retail</option>
                   <option>IT</option>
-                  <option>Beauty Industry</option>
-                  <option>Educational Coaches</option>
-                  <option>Construction</option>
-                  <option>Government</option>
-                  <option>Legal Professionals</option>
-                  <option>Real Estate</option>
-                  <option>Hospitality</option>
-                  <option>Health Practitioners</option>
-                  <option>Import Export Wholesale</option>
-                  <option>Digital Marketing</option>
-                  <option>Car Dealers</option>
                   <option>Finance</option>
+                  <option>Construction</option>
+                  <option>Hospitality</option>
                   <option>Other</option>
                 </select>
 
-                <div className="mt-6 p-4 bg-gray-100 rounded-lg text-sm">
-                  <p className="font-semibold mb-1">Business Logo Submission</p>
-                  <p>
-                    Please email your logo to{" "}
-                    <strong>nzsme2026@gmail.com</strong>
-                  </p>
-                  <p>
-                    Or WhatsApp to <strong>+64 27 333 3300</strong>
-                  </p>
+                <div className="mt-6 p-4 bg-gray-100 rounded text-sm">
+                  Email logo to <strong>nzsme2026@gmail.com</strong> or WhatsApp <strong>+64 27 333 3300</strong>
                 </div>
               </div>
 
               <button
                 type="submit"
                 disabled={!isPaid}
-                className="bg-blue-600 text-white px-8 py-3 rounded-lg disabled:bg-gray-400"
+                className="bg-blue-600 text-white px-6 py-3 rounded"
               >
                 Submit Application
               </button>
@@ -298,9 +213,7 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
 
             <div className="bg-gray-100 p-4 rounded-lg inline-block">
               <p className="text-sm text-gray-600">Confirmation ID</p>
-              <p className="text-xl font-bold text-slate-900">
-                {confirmationId}
-              </p>
+              <p className="text-xl font-bold">{confirmationId}</p>
             </div>
           </div>
         )}
