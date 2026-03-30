@@ -29,6 +29,27 @@ export async function POST(req: Request) {
     const data = await req.json();
     console.log("PAYLOAD:", data);
 
+    // 🔒 Duplicate protection (based on email)
+    if (data.email) {
+      const { data: existing, error: checkError } = await supabaseAdmin
+        .from("membership_applications")
+        .select("id")
+        .eq("email", data.email)
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+      if (checkError) {
+        console.error("CHECK ERROR:", checkError);
+      }
+
+      if (existing && existing.length > 0) {
+        console.log("Duplicate detected, skipping insert");
+
+        // Return success to avoid user confusion
+        return NextResponse.json({ success: true });
+      }
+    }
+
     // Insert into DB
     const { error: dbError } = await supabaseAdmin
       .from("membership_applications")
