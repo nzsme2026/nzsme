@@ -28,18 +28,18 @@ export default function AdminPage() {
       setMembers(data.members || []);
     } catch (err) {
       console.error(err);
+      alert("Failed to load members");
     }
     setLoading(false);
   };
 
   return (
     <>
-      {/* ✅ SAME HEADER AS HOMEPAGE */}
       <Navbar />
 
       {!authenticated ? (
         <div className="flex h-[80vh] items-center justify-center">
-          <div className="p-6 border rounded-lg shadow-md bg-white">
+          <div className="p-6 border rounded-lg shadow-md bg-white w-[320px]">
             <h1 className="text-xl font-semibold mb-4">Admin Login</h1>
             <input
               type="password"
@@ -57,29 +57,59 @@ export default function AdminPage() {
           </div>
         </div>
       ) : (
-        <div className="p-6 max-w-6xl mx-auto">
-          <h1 className="text-2xl font-bold mb-6">Members</h1>
+        <div className="p-6 max-w-7xl mx-auto">
+          <h1 className="text-2xl font-bold mb-6">
+            Membership Applications (Live)
+          </h1>
 
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <div className="bg-white shadow rounded-lg overflow-hidden">
-              <table className="w-full border">
+            <div className="bg-white shadow rounded-lg overflow-auto">
+              <table className="w-full border text-sm">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th className="p-3 text-left">First Name</th>
+                    <th className="p-3 text-left">Name</th>
                     <th className="p-3 text-left">Email</th>
                     <th className="p-3 text-left">Phone</th>
+                    <th className="p-3 text-left">Business</th>
+                    <th className="p-3 text-left">Category</th>
+                    <th className="p-3 text-left">Payment</th>
+                    <th className="p-3 text-left">Date</th>
                   </tr>
                 </thead>
                 <tbody>
                   {members.map((m, i) => (
                     <tr key={i} className="border-t">
-                      <td className="p-3">{m.first_name}</td>
+                      <td className="p-3">
+                        {m.first_name} {m.last_name}
+                      </td>
                       <td className="p-3">{m.email}</td>
                       <td className="p-3">{m.phone || "-"}</td>
+                      <td className="p-3">
+                        {m.registered_business_name || "-"}
+                      </td>
+                      <td className="p-3">{m.category || "-"}</td>
+                      <td className="p-3">
+                        <span className="px-2 py-1 rounded bg-green-100 text-green-700 text-xs">
+                          {m.payment_status || "paid"}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        {m.created_at
+                          ? new Date(m.created_at).toLocaleString()
+                          : "-"}
+                      </td>
                     </tr>
                   ))}
+
+                  {members.length === 0 && (
+                    <tr>
+                      <td colSpan={7} className="p-4 text-center text-gray-500">
+                        No data found
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
