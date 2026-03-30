@@ -10,7 +10,7 @@ if (!apiKey) {
 
 const resend = new Resend(apiKey!);
 
-// Use SERVICE ROLE key for backend insert (bypasses RLS safely)
+// Supabase admin client
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -23,12 +23,13 @@ const supabaseAdmin = createClient(
 );
 
 export async function POST(req: Request) {
-  console.log("SUBMIT API HIT"); // ← Added log to confirm route execution
+  console.log("SUBMIT API HIT");
 
   try {
     const data = await req.json();
+    console.log("PAYLOAD:", data);
 
-    // Insert into Supabase FIRST
+    // Insert into DB
     const { error: dbError } = await supabaseAdmin
       .from("membership_applications")
       .insert([
@@ -50,18 +51,26 @@ export async function POST(req: Request) {
         },
       ]);
 
+    // ❌ If DB fails → return SAFE message
     if (dbError) {
       console.error("DB INSERT ERROR:", dbError);
+
       return NextResponse.json(
-        { error: "Failed to store application" },
+        {
+          error:
+            "We have received your payment. However, there was an issue submitting your details. Please feel free to WhatsApp your details to Shailesh on 0273333300.",
+        },
         { status: 500 }
       );
     }
 
-    // Send email (non-blocking)
+    // ✅ Respond immediately (prevents timeout)
+    const response = NextResponse.json({ success: true });
+
+    // 🔁 Send email in background (no await)
     if (apiKey) {
-      try {
-        await resend.emails.send({
+      resend.emails
+        .send({
           from: "NZSME <onboarding@resend.dev>",
           to: ["nzsme2026@gmail.com"],
           subject: "New NZSME Membership Application",
@@ -83,18 +92,21 @@ export async function POST(req: Request) {
             <p><strong>Description:</strong> ${data.description || ""}</p>
             <p><strong>Category:</strong> ${data.category || ""}</p>
           `,
+        })
+        .catch((emailError) => {
+          console.error("EMAIL ERROR:", emailError);
         });
-      } catch (emailError) {
-        console.error("EMAIL ERROR (non-blocking):", emailError);
-      }
     }
 
-    return NextResponse.json({ success: true });
-
-  } catch (error) {
+    return response;
+  } catch (error: any) {
     console.error("SERVER ERROR:", error);
+
     return NextResponse.json(
-      { error: "Server error" },
+      {
+        error:
+          "We have received your payment. However, there was an issue submitting your details. Please feel free to WhatsApp your details to Shailesh on 0273333300.",
+      },
       { status: 500 }
     );
   }
