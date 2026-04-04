@@ -8,6 +8,7 @@ export async function POST() {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
+
       line_items: [
         {
           price_data: {
@@ -15,13 +16,22 @@ export async function POST() {
             product_data: {
               name: "NZSME Membership - Annual",
             },
-            unit_amount: 6000, // $60 NZD
+            unit_amount: 6000,
           },
           quantity: 1,
         },
       ],
-      success_url: "https://nzsme.org/apply?paid=true",
+
+      // ✅ IMPORTANT: add session_id
+      success_url:
+        "https://nzsme.org/apply?paid=true&session_id={CHECKOUT_SESSION_ID}",
+
       cancel_url: "https://nzsme.org/apply",
+
+      // ✅ OPTIONAL but useful (future use)
+      metadata: {
+        source: "nzsme_membership",
+      },
     });
 
     if (!session.url) {
