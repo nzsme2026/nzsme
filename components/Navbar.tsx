@@ -5,6 +5,7 @@ import { useState } from "react";
 
 const navLinks = [
   { href: "/", label: "Home" },
+  { href: "/about", label: "About" }, // ✅ NEW
   { href: "/community", label: "Community" },
   { href: "/directory", label: "Directory" },
   { href: "/events", label: "Events" },
@@ -35,7 +36,7 @@ export default function Navbar() {
             <Link
               key={item.label}
               href={item.href}
-              className={`text-sm ${
+              className={`text-sm transition hover:text-yellow-400 ${
                 item.label === "Events"
                   ? "text-yellow-400"
                   : "text-white"
@@ -65,7 +66,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ✅ FIXED MOBILE MENU (OVERLAY, NOT INLINE) */}
+      {/* Mobile Menu */}
       {menuOpen && (
         <div className="absolute top-full left-0 w-full bg-[#07153a] shadow-lg md:hidden">
           <div className="flex flex-col px-5 py-4">
