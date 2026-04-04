@@ -27,11 +27,11 @@ export default function HomePage() {
           {/* Left */}
           <div className="max-w-xl">
 
-            {/* 🔥 PREMIUM LOGO (NEW) */}
+            {/* ✅ FIXED LOGO */}
             <img
-              src="/logo-wide.png"
+              src="/nzsme-logo.png"
               alt="NZSME"
-              className="mb-6 max-w-[260px]"
+              className="mb-6 max-w-[220px]"
             />
 
             <div className="text-xs font-semibold tracking-wide text-slate-500">
@@ -103,11 +103,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 🔥 UPCOMING EVENT SECTION (NEW - IMPORTANT) */}
+      {/* EVENT */}
       <section className="relative bg-[#0b1b34] text-white py-16">
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
 
-          {/* Left */}
           <div>
             <h2 className="text-3xl font-semibold mb-4">
               Upcoming: NZSME Launch Event
@@ -129,13 +128,11 @@ export default function HomePage() {
             </a>
           </div>
 
-          {/* Right */}
           <img
             src="/event-main.jpg"
             alt="Event"
             className="rounded-xl shadow-lg"
           />
-
         </div>
       </section>
 

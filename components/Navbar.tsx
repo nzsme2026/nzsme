@@ -1,68 +1,85 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
-import Image from "next/image";
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/community", label: "Community" },
+  { href: "/directory", label: "Directory" },
+  { href: "/events", label: "Events" },
+  { href: "/apply", label: "Apply" },
+  { href: "/login", label: "Login" },
+];
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="relative z-50 w-full border-b border-slate-200/70 bg-slate-900">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-
-        {/* LOGO */}
-        <a href="/" className="flex items-center">
-          <Image
-            src="/logo-square.png"
-            alt="NZSME Logo"
-            width={90}
-            height={90}
-            className="object-contain"
-            priority
+    <header className="bg-[#07153a] text-white relative z-50">
+      
+      {/* TOP BAR */}
+      <div className="max-w-6xl mx-auto px-5 py-4 flex items-center justify-between">
+        
+        <Link href="/">
+          <img
+            src="/NZSME.jpeg"
+            alt="NZSME"
+            className="h-14"
           />
-        </a>
+        </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-200">
-          <a href="/" className="hover:text-white">Home</a>
-          <a href="/community" className="hover:text-white">Community</a>
-          <a href="/directory" className="hover:text-white">Directory</a> {/* ✅ NEW */}
-          <a href="/events" className="text-yellow-400 font-semibold">Events</a>
-          <a href="/apply" className="hover:text-white">Apply</a>
+        <nav className="hidden md:flex gap-8">
+          {navLinks.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className={`text-sm ${
+                item.label === "Events"
+                  ? "text-yellow-400"
+                  : "text-white"
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
-        {/* Right */}
-        <div className="flex items-center gap-4">
-          <a href="/login" className="hidden md:inline-flex text-sm text-slate-200 hover:text-white">
-            Login
-          </a>
-
-          <a
+        {/* Right Side */}
+        <div className="flex items-center gap-3">
+          <Link
             href="/apply"
-            className="bg-white text-slate-900 px-4 py-2 rounded-md text-sm font-semibold"
+            className="bg-white text-[#07153a] px-4 py-2 rounded-lg text-sm font-semibold"
           >
             Apply Now
-          </a>
+          </Link>
 
-          {/* Mobile Menu */}
+          {/* Hamburger */}
           <button
-            onClick={() => setOpen(!open)}
-            className="md:hidden text-white text-xl"
+            className="md:hidden p-2 border border-white/30 rounded"
+            onClick={() => setMenuOpen(!menuOpen)}
           >
-            ☰
+            {menuOpen ? "✕" : "☰"}
           </button>
         </div>
       </div>
 
-      {/* Mobile Dropdown */}
-      {open && (
-        <div className="md:hidden bg-slate-900 px-6 pb-4 space-y-3 text-slate-200">
-          <a href="/">Home</a>
-          <a href="/community">Community</a>
-          <a href="/directory">Directory</a> {/* ✅ NEW */}
-          <a href="/events" className="text-yellow-400 font-semibold">Events</a>
-          <a href="/apply">Apply</a>
-          <a href="/login">Login</a>
+      {/* ✅ FIXED MOBILE MENU (OVERLAY, NOT INLINE) */}
+      {menuOpen && (
+        <div className="absolute top-full left-0 w-full bg-[#07153a] shadow-lg md:hidden">
+          <div className="flex flex-col px-5 py-4">
+            {navLinks.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+                className="py-3 border-b border-white/10 text-white"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </header>
