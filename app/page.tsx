@@ -15,16 +15,25 @@ export default function HomePage() {
         }}
       />
 
-      {/* Soft Overlay for readability */}
+      {/* Soft Overlay */}
       <div className="pointer-events-none absolute inset-0 bg-white/70" />
 
       <Navbar />
 
-      <section className="relative mx-auto max-w-6xl px-6 pt-16 pb-28">
+      {/* HERO */}
+      <section className="relative mx-auto max-w-6xl px-6 pt-16 pb-20">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 items-center">
           
           {/* Left */}
           <div className="max-w-xl">
+
+            {/* 🔥 PREMIUM LOGO (NEW) */}
+            <img
+              src="/logo-wide.png"
+              alt="NZSME"
+              className="mb-6 max-w-[260px]"
+            />
+
             <div className="text-xs font-semibold tracking-wide text-slate-500">
               Private Membership Network
             </div>
@@ -94,7 +103,43 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Facebook Community Section */}
+      {/* 🔥 UPCOMING EVENT SECTION (NEW - IMPORTANT) */}
+      <section className="relative bg-[#0b1b34] text-white py-16">
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+
+          {/* Left */}
+          <div>
+            <h2 className="text-3xl font-semibold mb-4">
+              Upcoming: NZSME Launch Event
+            </h2>
+
+            <p className="text-gray-300 mb-4">
+              Join business owners and leaders across New Zealand for an exclusive launch event designed to create meaningful connections and real opportunities.
+            </p>
+
+            <p className="mb-2">📅 13 April 2026</p>
+            <p className="mb-2">🕕 6:00 PM – 9:00 PM</p>
+            <p className="mb-4">📍 JetPark Hotel Auckland Airport</p>
+
+            <a
+              href="/events"
+              className="inline-block bg-white text-[#0b1b34] px-6 py-3 rounded-md font-semibold"
+            >
+              View Event Details
+            </a>
+          </div>
+
+          {/* Right */}
+          <img
+            src="/event-main.jpg"
+            alt="Event"
+            className="rounded-xl shadow-lg"
+          />
+
+        </div>
+      </section>
+
+      {/* COMMUNITY */}
       <section className="relative bg-slate-900 text-white py-20">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h2 className="text-3xl font-semibold">
@@ -103,7 +148,6 @@ export default function HomePage() {
 
           <p className="mt-4 text-slate-300 max-w-2xl mx-auto leading-7">
             Stay updated with member highlights, business events, and networking opportunities.
-            Follow our official Facebook page and be part of the growing NZSME network.
           </p>
 
           <div className="mt-8">
