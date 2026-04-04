@@ -27,18 +27,19 @@ export default function HomePage() {
           {/* Left */}
           <div className="max-w-xl">
 
-            {/* ✅ FIXED LOGO */}
-            <img
-              src="/nzsme-logo.png"
-              alt="NZSME"
-              className="mb-6 max-w-[220px]"
-            />
-
-            <div className="text-xs font-semibold tracking-wide text-slate-500">
-              Private Membership Network
+            {/* 🔥 CLEAN BRAND ROW (FIXED) */}
+            <div className="mb-5 flex items-center gap-3">
+              <img
+                src="/nzsme-logo.png"
+                alt="NZSME"
+                className="h-10 w-auto object-contain"
+              />
+              <span className="text-sm font-semibold tracking-wide text-slate-500">
+                Private Membership Network
+              </span>
             </div>
 
-            <h1 className="mt-4 font-serif text-5xl leading-[1.05] text-slate-900">
+            <h1 className="mt-2 font-serif text-5xl leading-[1.05] text-slate-900">
               Where NZ <br />
               Business <br />
               Leaders Connect
