@@ -65,6 +65,7 @@ export default function AboutPage() {
             <a
               href="https://www.linkedin.com/in/shaileshbagwe/"
               target="_blank"
+              rel="noopener noreferrer"
               className="inline-block mt-6 bg-slate-900 text-white px-5 py-3 rounded-md text-sm font-semibold"
             >
               View LinkedIn Profile
@@ -106,11 +107,22 @@ export default function AboutPage() {
           </p>
 
           <div className="mt-6 flex justify-center">
-            <img
-              src="/webfitnews-logo.png"
-              alt="Webfit News"
-              className="h-12"
-            />
+            <a
+              href="https://webfitnews.co.nz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-block"
+            >
+              <img
+                src="/webfitnews-logo.png"
+                alt="Webfit News"
+                className="h-12 transition-all duration-300 ease-out
+                           group-hover:scale-110
+                           group-hover:-translate-y-1
+                           group-hover:shadow-lg
+                           group-hover:shadow-slate-300"
+              />
+            </a>
           </div>
 
         </div>

@@ -68,23 +68,21 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
       const result = await res.json();
 
       if (!res.ok) {
-        console.error("Submit API error:", result);
         setErrorMsg(result.error || "Something went wrong.");
         return;
       }
 
-      // ✅ REAL ID FROM BACKEND
       setConfirmationId(result.confirmationId);
       setSubmitted(true);
 
     } catch (error) {
-      console.error("Submit error:", error);
       setErrorMsg("Submission failed. Please try again.");
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
+      
       {/* Header */}
       <header className="relative z-10 w-full border-b border-slate-200/70 bg-slate-900">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
@@ -97,12 +95,6 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
               priority
             />
           </Link>
-
-          <nav className="hidden items-center gap-8 text-sm font-medium text-slate-200 md:flex">
-            <Link className="hover:text-white transition" href="/">
-              Home
-            </Link>
-          </nav>
 
           <div className="flex items-center gap-4">
             <Link
@@ -125,11 +117,17 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
       <div className="max-w-5xl mx-auto py-12 px-6">
         {!submitted ? (
           <>
+            {/* PAYMENT BLOCK */}
             {!isPaid && (
               <div className="mb-10 p-6 bg-white border rounded-lg text-center shadow-sm">
                 <h2 className="text-lg font-semibold mb-2">
                   Membership Fee - $60 NZD / Year
                 </h2>
+
+                <p className="text-sm text-gray-500 mb-4">
+                  Please complete payment to unlock the application form.
+                </p>
+
                 <button
                   onClick={handlePayment}
                   className="bg-black text-white px-6 py-2 rounded"
@@ -145,9 +143,12 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
               </div>
             )}
 
+            {/* FORM */}
             <form
               onSubmit={handleSubmit}
-              className="bg-white p-8 rounded-xl shadow-sm border space-y-8"
+              className={`bg-white p-8 rounded-xl shadow-sm border space-y-8 ${
+                !isPaid ? "opacity-50 pointer-events-none" : ""
+              }`}
             >
               {/* PERSONAL */}
               <div>
@@ -192,10 +193,15 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
                 </div>
               </div>
 
+              {/* SUBMIT BUTTON FIXED */}
               <button
                 type="submit"
                 disabled={!isPaid}
-                className="bg-blue-600 text-white px-6 py-3 rounded"
+                className={`px-6 py-3 rounded text-white font-semibold ${
+                  isPaid
+                    ? "bg-blue-600 hover:bg-blue-700"
+                    : "bg-gray-400 cursor-not-allowed"
+                }`}
               >
                 Submit Application
               </button>
