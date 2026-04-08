@@ -26,7 +26,8 @@ export async function GET() {
         address,
         description,
         category,
-        payment_status
+        payment_status,
+        logo_url
       `)
       .eq("payment_status", "paid")
       .order("created_at", { ascending: false });

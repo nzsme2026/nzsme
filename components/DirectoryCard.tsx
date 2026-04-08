@@ -54,10 +54,11 @@ export default function DirectoryCard({ member }: { member: DirectoryMember }) {
   const contactPhone = member.business_phone || member.phone || "";
   const category = member.category || "Other";
 
+  // 🔥 SAFER LOGO HANDLING
   const logo =
     member.logo_url && member.logo_url.trim() !== ""
       ? member.logo_url
-      : "/default-logo.png";
+      : "https://bcalplmfxbvbbfbsoceo.supabase.co/storage/v1/object/public/logos/default-logo.png";
 
   return (
     <div className="group h-full rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
@@ -68,12 +69,16 @@ export default function DirectoryCard({ member }: { member: DirectoryMember }) {
         {/* HEADER */}
         <div className="flex items-start gap-4">
 
-          {/* 🔥 PREMIUM LOGO BLOCK */}
+          {/* LOGO */}
           <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden shadow-inner">
             <img
               src={logo}
-              alt="Business Logo"
+              alt={displayBusiness}
               className="w-full h-full object-contain p-3"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src =
+                  "https://bcalplmfxbvbbfbsoceo.supabase.co/storage/v1/object/public/logos/default-logo.png";
+              }}
             />
           </div>
 
