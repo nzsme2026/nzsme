@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 
 export default function AucklandEventPage() {
@@ -241,12 +242,12 @@ export default function AucklandEventPage() {
           <p className="mb-6 text-gray-600">
             25 May 2026 • 6 PM – 9 PM • JetPark Hotel Hamilton
           </p>
-          <a
-            href="/apply"
-            className="bg-[#0b1b34] text-white px-6 py-3 rounded-md"
+          <Link
+            href="/events/hamilton-2026"
+            className="bg-[#0b1b34] text-white px-6 py-3 rounded-md inline-block"
           >
-            Register Now
-          </a>
+            View Hamilton Event →
+          </Link>
         </section>
       </main>
     </>
