@@ -44,23 +44,46 @@ function mapCategory(raw?: string | null) {
   return "Other";
 }
 
+function extractLocation(address?: string | null) {
+  if (!address) return "Other";
+
+  const value = address.toLowerCase();
+
+  if (value.includes("auckland")) return "Auckland";
+  if (value.includes("hamilton")) return "Hamilton";
+  if (value.includes("wellington")) return "Wellington";
+  if (value.includes("christchurch")) return "Christchurch";
+  if (value.includes("tauranga")) return "Tauranga";
+  if (value.includes("palmerston north")) return "Palmerston North";
+  if (value.includes("rotorua")) return "Rotorua";
+  if (value.includes("new plymouth")) return "New Plymouth";
+  if (value.includes("napier")) return "Napier";
+  if (value.includes("hastings")) return "Hastings";
+  if (value.includes("whangarei")) return "Whangārei";
+  if (value.includes("dunedin")) return "Dunedin";
+  if (value.includes("queenstown")) return "Queenstown";
+  if (value.includes("invercargill")) return "Invercargill";
+
+  return "Other";
+}
+
 export default function DirectoryPage() {
   const [members, setMembers] = useState<DirectoryMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedLocation, setSelectedLocation] = useState("All");
 
   useEffect(() => {
     const fetchDirectory = async () => {
       try {
-        // 🔥 cache first (instant load)
         const cached = localStorage.getItem("directory_members");
         if (cached) {
-          setMembers(JSON.parse(cached));
+          const parsed = JSON.parse(cached);
+          setMembers(parsed);
           setLoading(false);
         }
 
-        // 🔥 fetch fresh in background
         const res = await fetch("/api/directory-members");
         const data = await res.json();
 
@@ -78,14 +101,26 @@ export default function DirectoryPage() {
     fetchDirectory();
   }, []);
 
+  const locationOptions = useMemo(() => {
+    const uniqueLocations = Array.from(
+      new Set(members.map((member) => extractLocation(member.address)))
+    ).sort((a, b) => a.localeCompare(b));
+
+    return ["All", ...uniqueLocations];
+  }, [members]);
+
   const filteredMembers = useMemo(() => {
-    const searchValue = search.toLowerCase();
+    const searchValue = search.toLowerCase().trim();
 
     return members.filter((member) => {
       const category = mapCategory(member.category);
+      const location = extractLocation(member.address);
 
       const matchesCategory =
         selectedCategory === "All" || category === selectedCategory;
+
+      const matchesLocation =
+        selectedLocation === "All" || location === selectedLocation;
 
       const text = [
         member.first_name,
@@ -95,6 +130,7 @@ export default function DirectoryPage() {
         member.registered_business_name,
         member.trading_name,
         member.description,
+        member.address,
       ]
         .filter(Boolean)
         .join(" ")
@@ -102,19 +138,18 @@ export default function DirectoryPage() {
 
       const matchesSearch = !searchValue || text.includes(searchValue);
 
-      return matchesCategory && matchesSearch;
+      return matchesCategory && matchesLocation && matchesSearch;
     });
-  }, [members, search, selectedCategory]);
+  }, [members, search, selectedCategory, selectedLocation]);
 
   return (
     <>
       <Navbar />
 
       <main className="min-h-screen bg-slate-50">
-
         {/* HEADER */}
         <section className="bg-white border-b">
-          <div className="mx-auto max-w-[1300px] px-6 py-10 flex justify-between items-center">
+          <div className="mx-auto max-w-[1300px] px-6 py-10 flex flex-col gap-4 md:flex-row md:justify-between md:items-center">
             <div>
               <h1 className="text-3xl font-semibold text-slate-900">
                 Business Directory
@@ -130,24 +165,38 @@ export default function DirectoryPage() {
           </div>
         </section>
 
-        {/* FILTER */}
+        {/* FILTERS */}
         <section className="mx-auto max-w-[1300px] px-6 py-6">
-          <div className="flex gap-4">
+          <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_220px_220px]">
             <input
               type="text"
               placeholder="Search businesses..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 rounded-xl border px-4 py-3"
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none focus:border-slate-500"
             />
 
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-60 rounded-xl border px-4 py-3"
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none focus:border-slate-500"
             >
               {CATEGORY_OPTIONS.map((c) => (
-                <option key={c}>{c}</option>
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={selectedLocation}
+              onChange={(e) => setSelectedLocation(e.target.value)}
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none focus:border-slate-500"
+            >
+              {locationOptions.map((location) => (
+                <option key={location} value={location}>
+                  {location}
+                </option>
               ))}
             </select>
           </div>
@@ -155,16 +204,17 @@ export default function DirectoryPage() {
 
         {/* GRID */}
         <section className="mx-auto max-w-[1300px] px-6 pb-20">
-
-          {/* 🔥 No blank screen anymore */}
           {loading && members.length === 0 ? (
             <div className="grid gap-10 md:grid-cols-2 xl:grid-cols-3">
-              {[1,2,3].map((i) => (
-                <div key={i} className="h-[220px] rounded-2xl bg-white animate-pulse border" />
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="h-[220px] rounded-2xl bg-white animate-pulse border border-slate-200"
+                />
               ))}
             </div>
           ) : filteredMembers.length === 0 ? (
-            <div className="text-center py-20 text-slate-500">
+            <div className="rounded-2xl border border-slate-200 bg-white py-20 text-center text-slate-500">
               No businesses found
             </div>
           ) : (

@@ -1,167 +1,140 @@
-import Image from "next/image";
 import Navbar from "@/components/Navbar";
-import BottomStatusBar from "@/components/BottomStatusBar";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen relative overflow-hidden bg-[#f5f7fb]">
-
-      {/* Background Skyline */}
-      <div
-        className="pointer-events-none absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: "url('/bg-auckland.png')",
-          filter: "grayscale(80%)"
-        }}
-      />
-
-      {/* Soft Overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-white/70" />
-
+    <>
       <Navbar />
 
-      {/* HERO */}
-      <section className="relative mx-auto max-w-6xl px-6 pt-16 pb-20">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 items-center">
+      <main className="bg-white">
+
+        {/* HERO */}
+        <section className="max-w-6xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-10 items-center">
           
-          {/* Left */}
-          <div className="max-w-xl">
-
-            {/* 🔥 CLEAN BRAND ROW (FIXED) */}
-            <div className="mb-5 flex items-center gap-3">
-              <img
-                src="/nzsme-logo.png"
-                alt="NZSME"
-                className="h-10 w-auto object-contain"
-              />
-              <span className="text-sm font-semibold tracking-wide text-slate-500">
-                Private Membership Network
-              </span>
-            </div>
-
-            <h1 className="mt-2 font-serif text-5xl leading-[1.05] text-slate-900">
-              Where NZ <br />
-              Business <br />
-              Leaders Connect
+          <div>
+            <h1 className="text-4xl md:text-5xl font-semibold mb-4">
+              Where NZ Business Leaders Connect
             </h1>
 
-            <p className="mt-5 text-base leading-7 text-slate-600">
-              Join New Zealand&apos;s premier private network for SME owners.
-              Access verified business connections, exclusive events, and growth opportunities.
+            <p className="text-gray-600 mb-6">
+              NZSME is a private membership network built for serious business owners across New Zealand. Connect, collaborate, and grow with verified members.
             </p>
 
-            <div className="mt-7 flex flex-wrap items-center gap-3">
+            <div className="flex gap-4">
               <a
                 href="/apply"
-                className="inline-flex items-center justify-center rounded-md bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-slate-800 transition"
+                className="bg-[#0b1b34] text-white px-6 py-3 rounded-md"
               >
                 Apply for Membership
-                <span className="ml-2">→</span>
               </a>
 
               <a
-                href="/login"
-                className="inline-flex items-center justify-center rounded-md border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50 transition"
+                href="/directory"
+                className="border border-gray-300 px-6 py-3 rounded-md"
               >
-                Member Login
+                View Members
               </a>
             </div>
 
-            {/* Stats */}
-            <div className="mt-10 flex items-center gap-10">
-              <div>
-                <div className="text-xl font-semibold text-slate-900">$60</div>
-                <div className="text-xs text-slate-500">Per Year</div>
-              </div>
-
-              <div>
-                <div className="text-xl font-semibold text-slate-900">100%</div>
-                <div className="text-xs text-slate-500">NZ Owned</div>
-              </div>
-
-              <div>
-                <div className="text-xl font-semibold text-slate-900">NZBN</div>
-                <div className="text-xs text-slate-500">Verified</div>
-              </div>
+            <div className="mt-6 text-sm text-gray-500">
+              $60 / year • NZBN Verified • Members Only
             </div>
           </div>
 
-          {/* Right */}
-          <div className="relative">
-            <div className="mx-auto w-full max-w-xl rounded-2xl bg-white shadow-lg ring-1 ring-slate-200/60 overflow-hidden">
-              <div className="relative aspect-[4/3] w-full">
-                <Image
-                  src="/hero-meeting.jpg"
-                  alt="NZSME meeting"
-                  fill
-                  priority
-                  className="object-cover"
-                />
-              </div>
-            </div>
+          <div>
+            <img
+              src="/hero-meeting.jpg"
+              alt="NZSME Network"
+              className="rounded-xl shadow-lg"
+            />
           </div>
 
-        </div>
-      </section>
+        </section>
 
-      {/* EVENT */}
-      <section className="relative bg-[#0b1b34] text-white py-16">
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+        {/* WHAT NZSME IS */}
+        <section className="bg-[#0b1b34] text-white py-20 text-center">
+          <div className="max-w-4xl mx-auto px-6">
+
+            <h2 className="text-3xl font-semibold mb-6">
+              A Stronger SME Network for New Zealand
+            </h2>
+
+            <p className="text-gray-300 mb-10">
+              NZSME is building a trusted ecosystem where business owners connect directly, share opportunities, and grow together without noise or посредники.
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-6 text-sm">
+
+              <div className="bg-[#12284a] p-6 rounded-lg">
+                ✔ Verified Business Members
+              </div>
+
+              <div className="bg-[#12284a] p-6 rounded-lg">
+                ✔ Real Networking Opportunities
+              </div>
+
+              <div className="bg-[#12284a] p-6 rounded-lg">
+                ✔ Access to Events & Insights
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+        {/* SOCIAL PROOF (AUCKLAND ONLY AS CREDIBILITY) */}
+        <section className="max-w-6xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-10 items-center">
 
           <div>
             <h2 className="text-3xl font-semibold mb-4">
-              Upcoming: NZSME Launch Event
+              Proven Start. Growing Nationwide.
             </h2>
 
-            <p className="text-gray-300 mb-4">
-              Join business owners and leaders across New Zealand for an exclusive launch event designed to create meaningful connections and real opportunities.
+            <p className="text-gray-600 mb-6">
+              NZSME launched successfully in Auckland with a full house of business owners, policymakers, and industry leaders. This is just the beginning.
             </p>
-
-            <p className="mb-2">📅 13 April 2026</p>
-            <p className="mb-2">🕕 6:00 PM – 9:00 PM</p>
-            <p className="mb-4">📍 JetPark Hotel Auckland Airport</p>
 
             <a
               href="/events"
-              className="inline-block bg-white text-[#0b1b34] px-6 py-3 rounded-md font-semibold"
+              className="text-blue-600 font-medium underline"
             >
-              View Event Details
+              View Events & Highlights →
             </a>
           </div>
 
-          <img
-            src="/event-main.jpg"
-            alt="Event"
-            className="rounded-xl shadow-lg"
-          />
-        </div>
-      </section>
+          <div className="bg-gray-100 rounded-xl p-10 text-center">
+            <p className="text-lg font-medium">
+              Auckland Launch Completed
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              Strong turnout • High engagement • Real impact
+            </p>
+          </div>
 
-      {/* COMMUNITY */}
-      <section className="relative bg-slate-900 text-white py-20">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <h2 className="text-3xl font-semibold">
-            Join the NZSME Community
-          </h2>
+        </section>
 
-          <p className="mt-4 text-slate-300 max-w-2xl mx-auto leading-7">
-            Stay updated with member highlights, business events, and networking opportunities.
-          </p>
+        {/* FINAL CTA */}
+        <section className="bg-gray-100 py-20 text-center">
+          <div className="max-w-3xl mx-auto px-6">
 
-          <div className="mt-8">
+            <h2 className="text-3xl font-semibold mb-6">
+              Join the NZSME Network
+            </h2>
+
+            <p className="text-gray-600 mb-8">
+              Be part of a growing community of business owners across New Zealand.
+            </p>
+
             <a
-              href="https://www.facebook.com/profile.php?id=61586404397699"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-md bg-white px-6 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-200 transition"
+              href="/apply"
+              className="bg-[#0b1b34] text-white px-8 py-3 rounded-md"
             >
-              Follow NZSME on Facebook
+              Apply Now
             </a>
-          </div>
-        </div>
-      </section>
 
-      <BottomStatusBar />
-    </main>
+          </div>
+        </section>
+
+      </main>
+    </>
   );
 }
