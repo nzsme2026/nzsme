@@ -59,7 +59,7 @@ export default function HomePage() {
             </h2>
 
             <p className="text-gray-300 mb-10">
-              NZSME is building a trusted ecosystem where business owners connect directly, share opportunities, and grow together without noise or посредники.
+              NZSME is building a trusted ecosystem where business owners connect directly, share opportunities, and grow together without noise.
             </p>
 
             <div className="grid md:grid-cols-3 gap-6 text-sm">

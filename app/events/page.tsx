@@ -104,7 +104,7 @@ export default function AucklandEventPage() {
           </div>
         </section>
 
-        {/* MEDIA & COVERAGE */}
+        {/* MEDIA COVERAGE */}
         <section className="max-w-5xl mx-auto px-6 pb-12">
           <h2 className="text-2xl font-semibold mb-6 text-center">Media & Coverage</h2>
 
@@ -143,7 +143,7 @@ export default function AucklandEventPage() {
                 className="w-28 h-20 object-cover rounded-md shrink-0"
               />
               <div>
-                <h3 className="font-semibold text-gray-900">Event Highlights (Facebook)</h3>
+                <h3 className="font-semibold text-gray-900">Event Highlights (NZSME Facebook Page)</h3>
                 <p className="text-sm text-gray-600 mt-1">
                   Key moments and audience engagement from the Auckland launch.
                 </p>
@@ -159,7 +159,7 @@ export default function AucklandEventPage() {
             >
               <img
                 src="/Auckland event Pic (15).jpeg"
-                alt="Post event update"
+                alt="Post event update[NZSME Facebook Page]"
                 className="w-28 h-20 object-cover rounded-md shrink-0"
               />
               <div>
@@ -239,7 +239,7 @@ export default function AucklandEventPage() {
         <section className="text-center pb-20 pt-16">
           <h2 className="text-2xl mb-4">Next Event: Hamilton</h2>
           <p className="mb-6 text-gray-600">
-            25 May 2026 • 6 PM – 9 PM • JetPark Hotel Auckland Airport
+            25 May 2026 • 6 PM – 9 PM • JetPark Hotel Hamilton
           </p>
           <a
             href="/apply"
