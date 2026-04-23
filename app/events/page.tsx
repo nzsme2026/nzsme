@@ -97,11 +97,18 @@ export default function AucklandEventPage() {
           </p>
         </section>
 
-        {/* VIDEO PLACEHOLDER */}
+        {/* VIDEO */}
         <section className="max-w-4xl mx-auto px-6 pb-12 text-center">
-          <div className="bg-gray-100 rounded-xl py-20">
-            <h3 className="text-xl font-semibold mb-2">Event Highlight Video</h3>
-            <p className="text-gray-500 text-sm">Coming soon</p>
+          <h3 className="text-xl font-semibold mb-4">Event Highlight Video</h3>
+          <div className="relative w-full overflow-hidden rounded-xl shadow-lg" style={{ paddingTop: "56.25%" }}>
+            <iframe
+              src="https://www.youtube.com/embed/Et62Cpvj1mI"
+              title="NZSME Auckland Launch Event 2026"
+              className="absolute top-0 left-0 w-full h-full"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
           </div>
         </section>
 
