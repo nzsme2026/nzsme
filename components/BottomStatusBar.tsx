@@ -6,12 +6,14 @@ export default function BottomStatusBar() {
           Copyright © 2026 NZSME. All rights reserved.
         </div>
 
-        <button
-          type="button"
+        <a
+          href="https://webfitt.co.nz"
+          target="_blank"
+          rel="noopener noreferrer"
           className="rounded-full bg-emerald-100 px-3 py-1 font-semibold text-emerald-700 hover:bg-emerald-200 transition"
         >
-          Powered by webfitt.com
-        </button>
+          Powered by Webfit Solutions Limited
+        </a>
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ export default function AucklandEventPage() {
 
           <div className="relative w-full pb-[56.25%] h-0 rounded-xl overflow-hidden shadow-lg">
             <iframe
-              src="https://www.youtube.com/embed/Et62Cpvj1mI"
+              src="https://www.youtube.com/watch?v=jogYCMiPL20"
               title="NZSME Auckland Launch Event 2026"
               className="absolute top-0 left-0 w-full h-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
