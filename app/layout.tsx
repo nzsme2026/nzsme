@@ -29,12 +29,12 @@ export default function RootLayout({
             <p className="mt-1">
               Powered by{" "}
               <a
-                href="https://webfitt.com"
+                href="https://webfitt.co.nz"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-green-600 font-medium hover:underline"
               >
-                webfitt.com
+                Webfit Solutions Limited
               </a>
             </p>
           </div>
