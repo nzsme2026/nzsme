@@ -10,6 +10,7 @@ type DirectoryMember = {
   last_name?: string | null;
   phone?: string | null;
   email?: string | null;
+  city?: string | null;
   registered_business_name?: string | null;
   nzbn?: string | null;
   trading_name?: string | null;
@@ -44,9 +45,13 @@ function mapCategory(raw?: string | null) {
   return "Other";
 }
 
-function extractLocation(address?: string | null) {
-  if (!address) return "Other";
+/* ✅ Single source of truth for location */
+function getLocation(member: DirectoryMember) {
+  if (member.city && member.city.trim() !== "") {
+    return member.city.trim();
+  }
 
+  const address = member.address || "";
   const value = address.toLowerCase();
 
   if (value.includes("auckland")) return "Auckland";
@@ -54,15 +59,6 @@ function extractLocation(address?: string | null) {
   if (value.includes("wellington")) return "Wellington";
   if (value.includes("christchurch")) return "Christchurch";
   if (value.includes("tauranga")) return "Tauranga";
-  if (value.includes("palmerston north")) return "Palmerston North";
-  if (value.includes("rotorua")) return "Rotorua";
-  if (value.includes("new plymouth")) return "New Plymouth";
-  if (value.includes("napier")) return "Napier";
-  if (value.includes("hastings")) return "Hastings";
-  if (value.includes("whangarei")) return "Whangārei";
-  if (value.includes("dunedin")) return "Dunedin";
-  if (value.includes("queenstown")) return "Queenstown";
-  if (value.includes("invercargill")) return "Invercargill";
 
   return "Other";
 }
@@ -101,9 +97,10 @@ export default function DirectoryPage() {
     fetchDirectory();
   }, []);
 
+  /* ✅ Dropdown uses same logic */
   const locationOptions = useMemo(() => {
     const uniqueLocations = Array.from(
-      new Set(members.map((member) => extractLocation(member.address)))
+      new Set(members.map((member) => getLocation(member)))
     ).sort((a, b) => a.localeCompare(b));
 
     return ["All", ...uniqueLocations];
@@ -114,7 +111,7 @@ export default function DirectoryPage() {
 
     return members.filter((member) => {
       const category = mapCategory(member.category);
-      const location = extractLocation(member.address);
+      const location = getLocation(member);
 
       const matchesCategory =
         selectedCategory === "All" || category === selectedCategory;
@@ -126,6 +123,7 @@ export default function DirectoryPage() {
         member.first_name,
         member.last_name,
         member.email,
+        member.city,
         member.business_email,
         member.registered_business_name,
         member.trading_name,

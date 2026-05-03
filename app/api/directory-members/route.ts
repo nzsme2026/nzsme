@@ -17,6 +17,7 @@ export async function GET() {
         last_name,
         phone,
         email,
+        city,
         registered_business_name,
         nzbn,
         trading_name,

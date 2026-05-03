@@ -4,6 +4,7 @@ type DirectoryMember = {
   last_name?: string | null;
   phone?: string | null;
   email?: string | null;
+  city?: string | null; // ✅ ADDED
   registered_business_name?: string | null;
   nzbn?: string | null;
   trading_name?: string | null;
@@ -54,7 +55,6 @@ export default function DirectoryCard({ member }: { member: DirectoryMember }) {
   const contactPhone = member.business_phone || member.phone || "";
   const category = member.category || "Other";
 
-  // 🔥 SAFER LOGO HANDLING
   const logo =
     member.logo_url && member.logo_url.trim() !== ""
       ? member.logo_url
@@ -99,6 +99,14 @@ export default function DirectoryCard({ member }: { member: DirectoryMember }) {
             <p className="text-sm text-slate-500">
               {displayName}
             </p>
+
+            {/* ✅ CITY (TOP - IMPORTANT VISIBILITY) */}
+            {member.city && (
+              <p className="text-xs text-blue-600 font-medium mt-1">
+                📍 {member.city}
+              </p>
+            )}
+
           </div>
         </div>
 
@@ -149,10 +157,18 @@ export default function DirectoryCard({ member }: { member: DirectoryMember }) {
           </p>
         )}
 
+        {/* ✅ CITY ALSO IN FOOTER (OPTIONAL BUT CONSISTENT) */}
+        {member.city && (
+          <p>
+            <span className="text-slate-500">City:</span>{" "}
+            {member.city}
+          </p>
+        )}
+
         {member.address && (
           <p>
             <span className="text-slate-500">Location:</span>{" "}
-            {member.address}
+             {member.city ? member.city : member.address}
           </p>
         )}
 

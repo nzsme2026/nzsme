@@ -14,6 +14,7 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
     lastName: "",
     phone: "",
     email: "",
+    city: "",
     registeredBusinessName: "",
     nzbn: "",
     tradingName: "",
@@ -161,7 +162,30 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
                   <input name="email" placeholder="Email" onChange={handleChange} className="border p-3 rounded" />
                 </div>
               </div>
+              {/* CITY DROPDOWN */}
+<div className="mb-4">
+  <label className="block text-sm font-medium mb-1">
+    City <span className="text-red-500">*</span>
+  </label>
 
+  <select
+    name="city"
+    required
+    className="w-full border rounded-md px-3 py-2"
+    value={formData.city || ""}
+    onChange={handleChange}
+  >
+    <option value="">Select City</option>
+    <option value="Auckland">Auckland</option>
+    <option value="Hamilton">Hamilton</option>
+    <option value="Christchurch">Christchurch</option>
+    <option value="Wellington">Wellington</option>
+    <option value="Nelson">Nelson</option>
+    <option value="Tauranga">Tauranga</option>
+    <option value="Whakatāne">Whakatāne</option>
+  </select>
+</div>
+               
               {/* BUSINESS */}
               <div>
                 <h2 className="text-xl font-semibold mb-2">Business Details</h2>

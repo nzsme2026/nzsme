@@ -22,6 +22,10 @@ export async function POST(req: Request) {
     const data = await req.json();
     console.log("PAYLOAD:", data);
 
+    // ✅ FIXED: SIMPLE + RELIABLE (no over-smart logic)
+    const city = (data.city || "").trim();
+    console.log("CITY VALUE:", city);
+
     // 🧠 SAFE CLEAN FUNCTION
     const clean = (s: string) =>
       (s || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
@@ -38,7 +42,7 @@ export async function POST(req: Request) {
 
     const confirmationId = `NZSME-${yyyy}${mm}${dd}-${fn}${ln}-${rand}`;
 
-    // 🔒 DUPLICATE CHECK (SAFE)
+    // 🔒 DUPLICATE CHECK
     let existing = null;
 
     if (data.email || data.phone) {
@@ -60,7 +64,6 @@ export async function POST(req: Request) {
       }
     }
 
-    // ✅ IF DUPLICATE → RETURN EXISTING ID
     if (existing) {
       console.log("Duplicate detected, returning existing ID");
 
@@ -70,7 +73,7 @@ export async function POST(req: Request) {
       });
     }
 
-    // ✅ INSERT INTO DB
+    // ✅ INSERT INTO DB (SAFE FIX)
     const { error: dbError } = await supabaseAdmin
       .from("membership_applications")
       .insert([
@@ -81,6 +84,8 @@ export async function POST(req: Request) {
           last_name: data.lastName || "",
           phone: data.phone || "",
           email: data.email || "",
+
+          city: city, // ✅ NO null, NO fallback tricks
 
           registered_business_name: data.registeredBusinessName || "",
           nzbn: data.nzbn || "",
@@ -97,12 +102,13 @@ export async function POST(req: Request) {
       ]);
 
     if (dbError) {
-      console.error("DB ERROR:", dbError);
+      console.error("DB ERROR FULL:", JSON.stringify(dbError, null, 2));
 
       return NextResponse.json(
         {
           error:
             "We received your payment, but there was an issue saving your details. Please WhatsApp your details to 0273333300.",
+          details: dbError,
         },
         { status: 500 }
       );
@@ -122,6 +128,7 @@ export async function POST(req: Request) {
             <p><strong>Name:</strong> ${data.firstName} ${data.lastName}</p>
             <p><strong>Phone:</strong> ${data.phone}</p>
             <p><strong>Email:</strong> ${data.email || "-"}</p>
+            <p><strong>City:</strong> ${city || "-"}</p>
             <hr/>
             <p><strong>Business:</strong> ${data.registeredBusinessName || "-"}</p>
             <p><strong>Category:</strong> ${data.category || "-"}</p>
@@ -130,7 +137,6 @@ export async function POST(req: Request) {
         .catch((err) => console.error("EMAIL ERROR:", err));
     }
 
-    // ✅ FINAL RESPONSE
     return NextResponse.json({
       success: true,
       confirmationId,
