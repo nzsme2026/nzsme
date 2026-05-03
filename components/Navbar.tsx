@@ -2,19 +2,26 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About" }, // ✅ NEW
+  { href: "/about", label: "About" },
   { href: "/community", label: "Community" },
   { href: "/directory", label: "Directory" },
   { href: "/events", label: "Events" },
+
+  // 🔥 IMPORTANT FLOW LINKS
+  { href: "/events/register", label: "Register" },
+  { href: "/sponsorship", label: "Sponsorship" },
+
   { href: "/apply", label: "Apply" },
   { href: "/login", label: "Login" },
 ];
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="bg-[#07153a] text-white relative z-50">
@@ -32,19 +39,23 @@ export default function Navbar() {
 
         {/* Desktop Nav */}
         <nav className="hidden md:flex gap-8">
-          {navLinks.map((item) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              className={`text-sm transition hover:text-yellow-400 ${
-                item.label === "Events"
-                  ? "text-yellow-400"
-                  : "text-white"
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navLinks.map((item) => {
+            const isActive = pathname === item.href;
+
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`text-sm transition ${
+                  isActive
+                    ? "text-yellow-400"
+                    : "text-white hover:text-yellow-400"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Right Side */}
@@ -75,7 +86,7 @@ export default function Navbar() {
                 key={item.label}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className="py-3 border-b border-white/10 text-white"
+                className="py-3 border-b border-white/10 text-white hover:text-yellow-400"
               >
                 {item.label}
               </Link>
