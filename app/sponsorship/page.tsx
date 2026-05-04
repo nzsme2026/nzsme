@@ -7,8 +7,18 @@ export default function SponsorshipPage() {
   const [amount, setAmount] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const [name, setName] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [email, setEmail] = useState("");
+  const [organisation, setOrganisation] = useState("");
+
   const handlePayment = async () => {
     if (!amount || amount < 250) return;
+
+    if (!name.trim() || !mobile.trim()) {
+      alert("Please enter your name and mobile number");
+      return;
+    }
 
     setLoading(true);
 
@@ -18,7 +28,13 @@ export default function SponsorshipPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({
+          name,
+          mobile,
+          email,
+          organisation,
+          amount,
+        }),
       });
 
       const data = await res.json();
@@ -62,7 +78,7 @@ export default function SponsorshipPage() {
             </p>
           </div>
 
-          {/* GRID */}
+          {/* BENEFITS */}
           <div className="grid md:grid-cols-2 gap-10 mb-14">
 
             <div className="bg-white p-6 rounded-2xl border shadow-sm">
@@ -92,18 +108,57 @@ export default function SponsorshipPage() {
 
           </div>
 
-          {/* CONTRIBUTION */}
+          {/* FORM + CONTRIBUTION */}
           <div className="bg-white border rounded-2xl p-8 shadow-sm">
 
+            <h3 className="text-xl font-semibold text-slate-900 mb-4">
+              Sponsor Details
+            </h3>
+
+            {/* INPUTS */}
+            <div className="grid sm:grid-cols-2 gap-4 mb-6">
+              <input
+                type="text"
+                placeholder="Full Name *"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="border rounded-md px-4 py-3"
+              />
+
+              <input
+                type="text"
+                placeholder="Mobile Number *"
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
+                className="border rounded-md px-4 py-3"
+              />
+
+              <input
+                type="email"
+                placeholder="Email (optional)"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="border rounded-md px-4 py-3"
+              />
+
+              <input
+                type="text"
+                placeholder="Organisation (optional)"
+                value={organisation}
+                onChange={(e) => setOrganisation(e.target.value)}
+                className="border rounded-md px-4 py-3"
+              />
+            </div>
+
             <h3 className="text-xl font-semibold text-slate-900 mb-2">
-              Make a Contribution
+              Select Contribution
             </h3>
 
             <p className="text-sm text-slate-600 mb-6">
-              Select a support level or enter your own contribution.
+              Choose a support level or enter your own contribution.
             </p>
 
-            {/* PRESET OPTIONS */}
+            {/* TIERS */}
             <div className="grid sm:grid-cols-3 gap-4 mb-6">
               {tiers.map((tier) => (
                 <button
@@ -121,7 +176,7 @@ export default function SponsorshipPage() {
               ))}
             </div>
 
-            {/* SHOW SELECTED AMOUNT */}
+            {/* SELECTED */}
             {amount && amount >= 250 && (
               <div className="mb-4 text-center">
                 <p className="text-lg font-semibold text-emerald-700">
@@ -130,7 +185,7 @@ export default function SponsorshipPage() {
               </div>
             )}
 
-            {/* CUSTOM INPUT */}
+            {/* CUSTOM */}
             <input
               type="number"
               placeholder="Enter your contribution amount"
@@ -147,10 +202,20 @@ export default function SponsorshipPage() {
 
             {/* CTA */}
             <button
-              disabled={!amount || amount < 250 || loading}
+              disabled={
+                !amount ||
+                amount < 250 ||
+                loading ||
+                !name ||
+                !mobile
+              }
               onClick={handlePayment}
               className={`w-full py-3 rounded-md font-semibold transition ${
-                !amount || amount < 250 || loading
+                !amount ||
+                amount < 250 ||
+                loading ||
+                !name ||
+                !mobile
                   ? "bg-gray-300 text-gray-500"
                   : "bg-emerald-600 text-white hover:bg-emerald-700"
               }`}
@@ -158,7 +223,6 @@ export default function SponsorshipPage() {
               {loading ? "Redirecting..." : "Proceed to Payment"}
             </button>
 
-            {/* TRUST */}
             <p className="text-xs text-slate-500 mt-4 text-center">
               Secure payment powered by Stripe.
             </p>
@@ -172,7 +236,6 @@ export default function SponsorshipPage() {
             </p>
           </div>
 
-          {/* FOOTNOTE */}
           <p className="text-sm text-slate-500 mt-6 text-center">
             All sponsorship engagements are managed under NZSME governance principles ensuring transparency and fairness.
           </p>

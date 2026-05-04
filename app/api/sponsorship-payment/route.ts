@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { createClient } from "@supabase/supabase-js";
 
 // ✅ Safe Stripe init
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -8,16 +9,20 @@ if (!process.env.STRIPE_SECRET_KEY) {
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// ✅ Robust base URL resolver (no blind trust)
+// ✅ Supabase init
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+  process.env.SUPABASE_SERVICE_ROLE_KEY as string
+);
+
+// ✅ Robust base URL resolver
 function getBaseUrl(req: Request) {
   const envUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
-  // use env ONLY if it is clearly production
   if (envUrl && envUrl.startsWith("http")) {
     return envUrl.replace(/\/$/, "");
   }
 
-  // fallback (works everywhere: local + Vercel)
   const url = new URL(req.url);
   return `${url.protocol}//${url.host}`;
 }
@@ -25,20 +30,41 @@ function getBaseUrl(req: Request) {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const amount = Number(body.amount);
 
-    console.log("Incoming amount:", amount);
+    const {
+      name,
+      mobile,
+      email,
+      organisation,
+      amount,
+    } = body;
+
+    const numericAmount = Number(amount);
+
+    console.log("Incoming sponsorship:", {
+      name,
+      mobile,
+      email,
+      organisation,
+      numericAmount,
+    });
 
     // ✅ HARD VALIDATION
-    if (!amount || isNaN(amount) || amount < 250) {
+    if (!name || !mobile || !numericAmount) {
+      return NextResponse.json(
+        { error: "Name and mobile are required" },
+        { status: 400 }
+      );
+    }
+
+    if (isNaN(numericAmount) || numericAmount < 250) {
       return NextResponse.json(
         { error: "Minimum sponsorship amount is $250" },
         { status: 400 }
       );
     }
 
-    // optional safety limit
-    if (amount > 50000) {
+    if (numericAmount > 50000) {
       return NextResponse.json(
         { error: "Amount too large" },
         { status: 400 }
@@ -48,9 +74,12 @@ export async function POST(req: Request) {
     const baseUrl = getBaseUrl(req);
     console.log("Base URL:", baseUrl);
 
+    // ✅ CREATE STRIPE SESSION
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
+
+      customer_email: email || undefined,
 
       line_items: [
         {
@@ -59,7 +88,7 @@ export async function POST(req: Request) {
             product_data: {
               name: "NZSME Sponsorship Contribution",
             },
-            unit_amount: Math.round(amount * 100),
+            unit_amount: Math.round(numericAmount * 100),
           },
           quantity: 1,
         },
@@ -67,23 +96,49 @@ export async function POST(req: Request) {
 
       metadata: {
         type: "sponsorship",
-        amount: String(amount),
+        name,
+        mobile,
+        email: email || "",
+        organisation: organisation || "",
+        amount: String(numericAmount),
       },
 
       success_url: `${baseUrl}/sponsorship-success`,
       cancel_url: `${baseUrl}/sponsorship`,
     });
 
-    if (!session.url) {
-      throw new Error("Stripe session URL not created");
+    if (!session || !session.id || !session.url) {
+      console.error("❌ Stripe session creation failed:", session);
+      throw new Error("Stripe session not created properly");
     }
 
-    console.log("Stripe session created:", session.id);
+    // ✅ SAVE TO DB (CRITICAL)
+    const { error: dbError } = await supabase
+      .from("sponsorship_contributions")
+      .insert([
+        {
+          name,
+          mobile,
+          email: email || null,
+          organisation: organisation || null,
+          amount: numericAmount,
+          currency: "NZD",
+          payment_status: "pending",
+          stripe_session_id: session.id,
+        },
+      ]);
+
+    if (dbError) {
+      console.error("❌ DB ERROR:", dbError);
+      throw new Error("Database insert failed");
+    }
+
+    console.log("✅ Sponsorship session created:", session.id);
 
     return NextResponse.json({ url: session.url });
 
   } catch (err: any) {
-    console.error("STRIPE ERROR:", err?.message || err);
+    console.error("❌ SPONSORSHIP ERROR:", err?.message || err);
 
     return NextResponse.json(
       { error: "Unable to initiate payment" },

@@ -118,7 +118,7 @@ export async function POST(req: Request) {
     if (process.env.RESEND_API_KEY) {
       resend.emails
         .send({
-          from: "NZSME <onboarding@resend.dev>",
+          from: "NZSME <noreply@nzsme.org>",
           to: ["nzsme2026@gmail.com"],
           subject: "New NZSME Membership Application",
           html: `
