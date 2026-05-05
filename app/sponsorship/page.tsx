@@ -90,7 +90,7 @@ export default function SponsorshipPage() {
                 <li>• Presence across NZSME platforms</li>
                 <li>• Recognition in communications</li>
                 <li>• Visibility at events and workshops</li>
-                <li>• Media exposure via Webfit News</li>
+                <li>• Media exposures</li>
               </ul>
             </div>
 
