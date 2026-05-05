@@ -157,7 +157,7 @@ export default function EventRegistrationPage() {
                 }`}
               >
                 <p className="font-semibold">Member Access</p>
-                <p className="text-sm text-slate-500">$5 entry</p>
+                <p className="text-sm text-slate-500">$10 entry</p>
               </button>
 
               <button
