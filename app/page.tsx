@@ -109,11 +109,11 @@ export default function HomePage() {
                 </a>
 
                 <a
-                  href="/events/register"
-                  className="border border-slate-300 px-6 py-3 rounded-xl font-semibold hover:bg-white transition"
-                >
-                  Register Now
-                </a>
+  href="/apply"
+  className="border border-slate-300 px-6 py-3 rounded-xl font-semibold hover:bg-white transition"
+>
+  Register Now
+</a>
               </div>
             </div>
 
