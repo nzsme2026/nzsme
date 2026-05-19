@@ -13,7 +13,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="flex flex-col min-h-screen bg-white">
-        
+
         {/* Main Content */}
         <main className="flex-grow">
           {children}
@@ -22,6 +22,7 @@ export default function RootLayout({
         {/* Footer */}
         <footer className="w-full border-t bg-white text-sm text-gray-500 py-6">
           <div className="max-w-6xl mx-auto px-6 text-center">
+
             <p>
               © 2026 NZSME. All rights reserved.
             </p>
@@ -37,6 +38,47 @@ export default function RootLayout({
                 Webfit Solutions Limited
               </a>
             </p>
+
+            {/* Footer Links */}
+            <div className="mt-4 flex flex-wrap justify-center gap-4 text-sm">
+
+              <a
+                href="/faq"
+                className="hover:text-black transition"
+              >
+                FAQ
+              </a>
+
+              <a
+                href="/membership-guidelines"
+                className="hover:text-black transition"
+              >
+                Membership Guidelines
+              </a>
+
+              <a
+                href="/executive-charter"
+                className="hover:text-black transition"
+              >
+                Executive Charter
+              </a>
+
+              <a
+                href="/terms-and-conditions"
+                className="hover:text-black transition"
+              >
+                Terms & Conditions
+              </a>
+
+              <a
+                href="/privacy-policy"
+                className="hover:text-black transition"
+              >
+                Privacy Policy
+              </a>
+
+            </div>
+
           </div>
         </footer>
 

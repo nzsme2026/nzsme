@@ -98,19 +98,44 @@ export default function AucklandEventPage() {
         </section>
 
         {/* VIDEO */}
-        <section className="max-w-4xl mx-auto px-6 pb-12 text-center">
-          <h3 className="text-xl font-semibold mb-4">Event Highlight Video</h3>
-          <div className="relative w-full overflow-hidden rounded-xl shadow-lg" style={{ paddingTop: "56.25%" }}>
-            <iframe
-              src="https://www.youtube.com/embed/Et62Cpvj1mI"
-              title="NZSME Auckland Launch Event 2026"
-              className="absolute top-0 left-0 w-full h-full"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        </section>
+        {/* EVENT VIDEOS */}
+<section className="max-w-6xl mx-auto px-6 pb-16">
+  <h2 className="text-3xl font-semibold text-center mb-8">
+    Event Videos & Speaker Sessions
+  </h2>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+    {[
+      "W7UrrCdkl-Y",
+      "HL0frBHTZWQ",
+      "pW_nHTSe-cE",
+      "pQ9UDvhMH2Y",
+      "klnTxcoTvww",
+      "_DbNtPN0omw",
+    ].map((videoId, index) => (
+      <div
+        key={index}
+        className="overflow-hidden rounded-2xl shadow-lg border bg-white"
+      >
+        <div
+          className="relative w-full"
+          style={{ paddingTop: "56.25%" }}
+        >
+          <iframe
+            src={`https://www.youtube.com/embed/${videoId}`}
+            title={`NZSME Video ${index + 1}`}
+            className="absolute top-0 left-0 w-full h-full"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    ))}
+
+  </div>
+</section>
 
         {/* MEDIA COVERAGE */}
         <section className="max-w-5xl mx-auto px-6 pb-12">
