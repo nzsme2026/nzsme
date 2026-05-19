@@ -216,7 +216,42 @@ export default function ApplyForm({ isPaid }: { isPaid: boolean }) {
                   Email logo to <strong>nzsme2026@gmail.com</strong> or WhatsApp <strong>+64 27 333 3300</strong>
                 </div>
               </div>
+              {/* MEMBERSHIP AGREEMENT */}
+              <div className="border rounded-xl p-5 bg-slate-50">
+                <h2 className="text-xl font-semibold mb-4">
+                  Membership Agreement
+                </h2>
 
+                <label className="flex gap-3 items-start text-sm text-slate-700">
+                  <input
+                    type="checkbox"
+                    required
+                    className="mt-1"
+                  />
+
+                  <span>
+                    I agree to NZSME{" "}
+                    <Link
+                      href="/terms-and-conditions"
+                      target="_blank"
+                      className="text-blue-600 underline"
+                    >
+                      Terms & Conditions
+                    </Link>
+                    , confirm that I have read the{" "}
+                    <Link
+                      href="/membership-guidelines"
+                      target="_blank"
+                      className="text-blue-600 underline"
+                    >
+                      Membership Guidelines
+                    </Link>
+                    , and understand that WhatsApp/Facebook groups are informal
+                    communication channels only and are not official legal or
+                    governance communication channels.
+                  </span>
+                </label>
+              </div>
               {/* SUBMIT BUTTON FIXED */}
               <button
                 type="submit"
