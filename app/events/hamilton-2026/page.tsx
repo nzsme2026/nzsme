@@ -92,19 +92,24 @@ export default function HamiltonEventPage() {
         </section>
 
         {/* POSTER */}
-        <section className="max-w-6xl mx-auto px-6 pb-20 text-center">
-          <h2 className="text-2xl font-semibold mb-8">
-            Official Event Poster
-          </h2>
+        {/* POSTER */}
+<section className="max-w-6xl mx-auto px-6 pb-20 text-center">
+  <h2 className="text-3xl font-semibold mb-8">
+    Official Hamilton Launch Poster
+  </h2>
 
-          <div className="bg-gray-50 p-6 rounded-2xl shadow-md flex justify-center">
-            <img
-              src="/hamilton-poster.jpg"
-              alt="NZSME Hamilton Event Poster"
-              className="w-full max-w-md md:max-w-lg lg:max-w-xl rounded-xl object-contain"
-            />
-          </div>
-        </section>
+  <div className="bg-gradient-to-b from-gray-50 to-white p-6 md:p-8 rounded-3xl shadow-xl border flex justify-center">
+    <img
+      src="/HamiltoPoster1905.jpeg"
+      alt="NZSME Hamilton Launch Event 2026 Poster"
+      className="w-full max-w-md md:max-w-2xl rounded-2xl object-contain shadow-lg"
+    />
+  </div>
+
+  <p className="text-gray-500 text-sm mt-4">
+    NZSME Hamilton Launch Event • 25 May 2026
+  </p>
+</section>
 
         {/* SUMMARY */}
         <section className="max-w-4xl mx-auto px-6 py-12 text-center">
