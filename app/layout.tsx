@@ -50,6 +50,13 @@ export default function RootLayout({
               </a>
 
               <a
+                href="/core-values"
+                className="hover:text-black transition"
+              >
+                Core Values
+              </a>
+
+              <a
                 href="/membership-guidelines"
                 className="hover:text-black transition"
               >
