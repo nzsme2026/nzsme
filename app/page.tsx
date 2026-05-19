@@ -27,7 +27,7 @@ export default function HomePage() {
                 visibility, and practical community support.
               </p>
 
-              <div className="flex flex-wrap gap-4">
+                            <div className="flex flex-wrap gap-4">
                 <a
                   href="/apply"
                   className="bg-white text-[#07153a] px-7 py-3 rounded-xl font-semibold hover:bg-slate-100 transition"
@@ -40,6 +40,26 @@ export default function HomePage() {
                   className="border border-white/40 text-white px-7 py-3 rounded-xl font-semibold hover:bg-white/10 transition"
                 >
                   View Events
+                </a>
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-4 text-sm">
+                <a
+                  href="https://www.instagram.com/nzsme2026?igsh=MTBwMzB1emo1a2VvZA%3D%3D&utm_source=qr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-200 hover:text-yellow-400 transition"
+                >
+                  Follow us on Instagram
+                </a>
+
+                <a
+                  href="https://www.facebook.com/share/1C4paUARyy/?mibextid=wwXIfr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-200 hover:text-yellow-400 transition"
+                >
+                  Follow us on Facebook
                 </a>
               </div>
 
@@ -251,12 +271,32 @@ export default function HomePage() {
               growth across New Zealand.
             </p>
 
-            <a
-              href="/apply"
-              className="bg-[#07153a] text-white px-8 py-3 rounded-xl font-semibold hover:bg-[#0b2361] transition"
-            >
-              Apply Now
-            </a>
+                       <div className="flex flex-wrap justify-center gap-4">
+              <a
+                href="/apply"
+                className="bg-[#07153a] text-white px-8 py-3 rounded-xl font-semibold hover:bg-[#0b2361] transition"
+              >
+                Apply Now
+              </a>
+
+              <a
+                href="https://www.instagram.com/nzsme2026?igsh=MTBwMzB1emo1a2VvZA%3D%3D&utm_source=qr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-slate-300 px-8 py-3 rounded-xl font-semibold hover:bg-white transition"
+              >
+                Instagram
+              </a>
+
+              <a
+                href="https://www.facebook.com/share/1C4paUARyy/?mibextid=wwXIfr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-slate-300 px-8 py-3 rounded-xl font-semibold hover:bg-white transition"
+              >
+                Facebook
+              </a>
+            </div>
 
           </div>
         </section>
